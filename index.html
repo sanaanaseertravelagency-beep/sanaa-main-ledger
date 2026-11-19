@@ -977,16 +977,16 @@ async function tryExistingSession(){
 const emptyLedger=()=>({database:{},agentOrder:[],activityLog:[]});
 async function getLedger(){
  if(!sbUser)throw Error('Sign in first');
- let {data,error}=await sb.from('ledgers').select('data,version').eq('user_id',sbUser.id).maybeSingle();
+ // Fetch account metadata and individual transaction rows together.
+ // Reading public.ledgers directly would show empty transaction arrays
+ // because row-based commits intentionally keep only metadata there.
+ const {data,error}=await sb.rpc('ledger_rows_get');
  if(error)throw error;
- if(!data){
-  const ins=await sb.from('ledgers').upsert({user_id:sbUser.id,data:emptyLedger(),version:1},{onConflict:'user_id',ignoreDuplicates:true});
-  if(ins.error)throw ins.error;
-  const r=await sb.from('ledgers').select('data,version').eq('user_id',sbUser.id).single();
-  if(r.error)throw r.error;data=r.data;
- }
- return {...data.data,_ledgerVersion:data.version};
+ if(!data || !data.database || typeof data._ledgerVersion !== 'number')
+   throw Error('Invalid row-based cloud response. No data was replaced.');
+ return data;
 }
+
 async function saveLedger(payload){
  const value=JSON.parse(payload),expected=Number(value._ledgerVersion);
   for(const agent of Object.values(value.database||{}))for(const tx of (agent.transactions||[]))tx._rowId ||= crypto.randomUUID();
