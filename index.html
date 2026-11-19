@@ -1,0 +1,1723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sanaa Naseer International Travel - Cloud Ledger</title>
+    <style>
+        :root {
+            --primary-color: #173b69;
+            --primary-light: #eaf0f8;
+            --accent-color: #fb8b24;
+            --danger-color: #e01e37;
+            --danger-hover: #b7091a;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-color: #1e293b;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --table-even-bg: #f8fafc;
+            --bank-box-bg: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            --bank-box-text: #0f172a;
+            --bank-label-text: #475569;
+            --bank-accent: #d97706;
+        }
+
+        /* DARK MODE STYLES */
+        [data-theme="dark"] {
+            --primary-color: #38bdf8;
+            --primary-light: #1e293b;
+            --accent-color: #fb8b24;
+            --danger-color: #f87171;
+            --danger-hover: #ef4444;
+            --bg-color: #0f172a;
+            --card-bg: #1e293b;
+            --text-color: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --table-even-bg: #182234;
+            --bank-box-bg: linear-gradient(135deg, #334155 0%, #1e293b 100%);
+            --bank-box-text: #f8fafc;
+            --bank-label-text: #cbd5e1;
+            --bank-accent: #fb8b24;
+        }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        .container {
+            width: 100%;
+            max-width: none;
+            box-sizing: border-box;
+            margin: 0;
+            background: var(--card-bg);
+            padding: 24px 28px;
+            border-radius: 16px;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 25px;
+            border-bottom: 2px solid var(--border-color);
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+        .header-branding { text-align: left; }
+        .system-title {
+            font-size: 26px;
+            font-weight: 800;
+            color: var(--primary-color);
+            letter-spacing: -0.5px;
+            margin: 0 0 4px 0;
+        }
+        .system-subtitle {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+        .header-info {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .info-pill {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+            border: 1px solid transparent;
+            transition: all 0.2s ease;
+        }
+        
+        .info-pill[contenteditable="true"] {
+            outline: none;
+            cursor: pointer;
+        }
+        .info-pill[contenteditable="true"]:hover {
+            border-color: var(--primary-color);
+        }
+        .info-pill[contenteditable="true"]:focus {
+            background: var(--card-bg);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(251, 139, 36, 0.2);
+        }
+
+        .theme-toggle-btn {
+            background: var(--primary-light);
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            padding: 8px 14px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 13px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+        .theme-toggle-btn:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
+        }
+
+        .sync-status {
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .sync-online { background: #dcfce7; color: #166534; }
+        .sync-saving { background: #fef9c3; color: #854d0e; }
+        .sync-error { background: #fee2e2; color: #991b1b; }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text-color);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .dashboard-section { display: block; }
+        .ledger-section { display: none; }
+
+        .control-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 24px;
+            margin-bottom: 30px;
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.02);
+        }
+        .panel-title {
+            margin-top: 0;
+            margin-bottom: 16px;
+            font-size: 15px;
+            font-weight: 700;
+            color: var(--primary-color);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .panel-row {
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            flex: 1;
+            min-width: 180px;
+        }
+        .form-group.wide { flex: 2; }
+        .form-group label { font-size: 13px; font-weight: 600; color: var(--text-muted); }
+        .form-group input, .form-group select {
+            padding: 11px 14px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--text-color);
+            background-color: var(--bg-color);
+            transition: all 0.2s;
+        }
+        .form-group input:focus, .form-group select:focus {
+            border-color: var(--primary-color);
+            background-color: var(--card-bg);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(15, 76, 92, 0.15);
+        }
+
+        .multi-entries-container {
+            margin-top: 15px;
+            border-top: 1px dashed var(--border-color);
+            padding-top: 15px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .multi-entry-row {
+            display: grid;
+            grid-template-columns: 1.1fr 1.3fr 2fr 1.15fr 1fr 1fr auto;
+            gap: 10px;
+            align-items: center;
+            background: var(--bg-color);
+            padding: 8px;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .btn {
+            background-color: #0f4c5c;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn:hover { background-color: #0b3742; transform: translateY(-1px); }
+        .btn:active { transform: translateY(0); }
+        .btn-secondary { background-color: #64748b; }
+        .btn-secondary:hover { background-color: #475569; }
+        .btn-print { background-color: #0284c7; }
+        .btn-print:hover { background-color: #0369a1; }
+        .btn-sm { padding: 8px 16px; font-size: 13px; border-radius: 6px; }
+        .btn-accent { background-color: var(--accent-color); }
+        .btn-accent:hover { background-color: #d66f13; }
+
+        .search-container { margin: 20px 0; }
+        .search-bar {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            font-size: 15px;
+            box-sizing: border-box;
+            background-color: var(--card-bg);
+            color: var(--text-color);
+            box-shadow: 0 1px 2px rgba(0,0,0,0.02);
+            transition: all 0.2s;
+        }
+        .search-bar:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(15, 76, 92, 0.15);
+        }
+
+        .agent-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .agent-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            cursor: grab;
+            position: relative;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            overflow: hidden;
+            user-select: none;
+        }
+        .agent-card:active { cursor: grabbing; }
+        .agent-card.dragging {
+            opacity: 0.5;
+            background: var(--bg-color);
+            border: 2px dashed var(--primary-color);
+        }
+        .agent-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px -4px rgba(0, 0, 0, 0.08);
+            border-color: var(--primary-color);
+        }
+        .agent-card h3 { margin: 0 0 4px 0; color: var(--primary-color); font-size: 13px; font-weight: 700; width: 68%; line-height: 1.2; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .agent-card p { margin: 2px 0; font-size: 11px; color: var(--text-muted); display: flex; align-items: center; gap: 4px; pointer-events: none; }
+        
+        .card-stats {
+            margin-top: 6px;
+            padding-top: 6px;
+            border-top: 1px solid var(--border-color);
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4px;
+            font-size: 10px;
+            pointer-events: none;
+        }
+        .card-stats span { color: var(--text-muted); }
+        .card-stats b { color: var(--text-color); font-weight: 600; }
+        
+        .card-balance {
+            margin-top: 8px;
+            font-weight: 700;
+            font-size: 11px;
+            padding: 4px;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid transparent;
+            pointer-events: none;
+        }
+        .balance-receivable { background: #f0fdf4; color: #166534; border-color: #bbf7d0; }
+        .balance-advance { background: #fef2f2; color: #991b1b; border-color: #fecaca; }
+
+        .delete-card-btn {
+            position: absolute;
+            right: 8px;
+            top: 10px;
+            background: #fee2e2;
+            color: var(--danger-color);
+            border: none;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            z-index: 10;
+        }
+        .delete-card-btn:hover { background: var(--danger-color); color: white; }
+
+        .drag-indicator {
+            position: absolute;
+            right: 8px;
+            bottom: 34px;
+            font-size: 10px;
+            color: #cbd5e1;
+        }
+
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.4);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(2px);
+        }
+        .modal-content {
+            background: var(--card-bg);
+            color: var(--text-color);
+            padding: 30px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 550px;
+            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+            position: relative;
+        }
+        .close-modal {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: var(--text-muted);
+            cursor: pointer;
+        }
+
+        .back-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+        .info-section { 
+            display: flex; 
+            justify-content: space-between; 
+            margin-bottom: 20px; 
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .agent-info { 
+            flex: 1.2;
+            min-width: 220px;
+            border: 1px solid var(--border-color); 
+            padding: 16px; 
+            background: var(--bg-color); 
+            border-radius: 14px; 
+        }
+        .agent-info h3 { margin: 0 0 6px 0; font-size: 11px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+        .agent-info .name { font-weight: 800; font-size: 18px; margin-bottom: 4px; color: var(--primary-color); }
+        .agent-info .address { color: var(--accent-color); font-weight: 700; font-size: 13px; }
+        
+        /* LIGHTENED CREDIT CARD STYLE FOR BANK SETTLEMENT */
+        .bank-info-box {
+            flex: 1.5;
+            min-width: 280px;
+            background: var(--bank-box-bg);
+            color: var(--bank-box-text);
+            padding: 16px 20px;
+            border-radius: 14px;
+            position: relative;
+            box-shadow: 0 4px 15px -3px rgba(0, 0, 0, 0.05);
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+        }
+
+        .bank-info-box h3 {
+            margin: 0 0 12px 0;
+            font-size: 11px;
+            color: var(--bank-accent);
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .bank-details-grid {
+            display: grid;
+            grid-template-columns: 85px 1fr;
+            gap: 8px 10px;
+            font-size: 13px;
+            align-items: center;
+        }
+
+        .bank-label {
+            font-weight: 600;
+            color: var(--bank-label-text);
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .bank-value {
+            font-weight: 600;
+            color: var(--bank-box-text);
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            border: 1px solid transparent;
+        }
+
+        .editable-field[contenteditable="true"] {
+            border: 1px solid transparent;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .editable-field[contenteditable="true"]:hover {
+            background: rgba(0, 0, 0, 0.05);
+            border-color: var(--border-color);
+        }
+
+        .editable-field[contenteditable="true"]:focus {
+            background: var(--card-bg);
+            border-color: var(--accent-color);
+            box-shadow: 0 0 8px rgba(251, 139, 36, 0.3);
+        }
+
+        .balance-box {
+            flex: 1;
+            min-width: 170px;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            text-align: center;
+            overflow: hidden;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.02);
+            display: flex;
+            flex-direction: column;
+        }
+        .balance-box-label { background-color: var(--primary-color); color: white; padding: 8px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .balance-box-value { padding: 12px; font-size: 16px; font-weight: 800; background: var(--card-bg); color: var(--text-color); flex: 1; display: flex; align-items: center; justify-content: center; }
+
+        table { width: 100%; border-collapse: separate; border-spacing: 0; margin-top: 15px; border-radius: 10px; overflow: hidden; border: 1px solid var(--border-color); }
+        th { background-color: #0f4c5c; color: white; font-weight: 600; padding: 10px; font-size: 13px; text-align: left; border-bottom: 1px solid var(--border-color); }
+        td { padding: 9px 10px; font-size: 12px; border-bottom: 1px solid var(--border-color); background: var(--card-bg); color: var(--text-color); }
+        tbody tr:last-child td { border-bottom: none; }
+        tbody tr:nth-child(even) td { background: var(--table-even-bg); }
+        
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+        
+        .action-btn-group {
+            display: flex;
+            gap: 4px;
+            justify-content: center;
+        }
+
+        .edit-row-btn {
+            background: #e0f2fe;
+            color: #0369a1;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .edit-row-btn:hover { background: #0284c7; color: white; }
+
+        .delete-row-btn { 
+            background: #fee2e2; 
+            color: var(--danger-color); 
+            border: none; 
+            padding: 4px 8px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 11px; 
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .delete-row-btn:hover { background: var(--danger-color); color: white; }
+
+
+        /* FULL-WIDTH WORKSPACE + LIVE ACTIVITY SIDEBAR */
+        .workspace-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1fr) 340px;
+            gap: 22px;
+            align-items: start;
+            width: 100%;
+        }
+        .workspace-main { min-width: 0; }
+        .activity-panel {
+            position: sticky;
+            top: 16px;
+            min-width: 0;
+            max-height: calc(100vh - 32px);
+            display: flex;
+            flex-direction: column;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: 0 4px 14px rgba(15,23,42,.06);
+            overflow: hidden;
+        }
+        .activity-heading {
+            padding: 18px 18px 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+        .activity-heading h2 { color: var(--primary-color); font-size: 17px; }
+        .activity-heading p { color: var(--text-muted); font-size: 12px; margin: 8px 0 0; }
+        .activity-tools { padding: 12px 16px 8px; }
+        .activity-tools input {
+            width: 100%; box-sizing: border-box; padding: 9px 10px;
+            border: 1px solid var(--border-color); border-radius: 8px;
+            background: var(--bg-color); color: var(--text-color);
+        }
+        .activity-list {
+            overflow-y: auto; padding: 8px 12px 14px;
+            display: flex; flex-direction: column; gap: 9px;
+        }
+        .activity-item {
+            border: 1px solid var(--border-color);
+            border-left: 4px solid var(--primary-color);
+            background: var(--bg-color); border-radius: 8px;
+            padding: 11px 12px; font-size: 12px; line-height: 1.55;
+            overflow-wrap: anywhere;
+        }
+        .activity-item.activity-delete { border-left-color: var(--danger-color); }
+        .activity-item.activity-add { border-left-color: #16a34a; }
+        .activity-item.activity-edit { border-left-color: #d97706; }
+        .activity-meta { color: var(--text-muted); font-size: 11px; margin-bottom: 4px; }
+        .activity-title { color: var(--text-color); font-weight: 800; margin-bottom: 3px; }
+        .activity-detail { color: var(--text-muted); }
+        .activity-empty { text-align: center; color: var(--text-muted); padding: 24px 10px; font-size: 13px; }
+        .activity-count { font-size: 11px; color: var(--text-muted); padding: 0 16px 8px; }
+        @media (max-width: 1050px) {
+            .workspace-grid { grid-template-columns: minmax(0, 1fr) 300px; gap: 14px; }
+            .container { padding: 18px; }
+        }
+        @media (max-width: 760px) {
+            .workspace-grid { grid-template-columns: 1fr; }
+            .activity-panel { position: static; max-height: 420px; }
+            .container { padding: 12px; }
+            .header { align-items: flex-start; }
+        }
+
+        /* PRINT STYLING CONTROL */
+        @media print {
+            .activity-panel, .control-panel, .actions-bar, .delete-col, .delete-row-btn, .edit-row-btn, .back-bar, .search-container, .delete-card-btn, .dashboard-section, .modal-overlay, .multi-entries-container, .sync-status, .theme-toggle-btn, .bank-info-box { display: none !important; }
+            .ledger-section { display: block !important; }
+            body { background: none; padding: 0; margin: 0; color: #000; font-size: 11px; }
+            .container { border: none; box-shadow: none; padding: 0; max-width: 100%; width: 100%; }\n            .workspace-grid { display: block; }
+            .header { padding-bottom: 10px; margin-bottom: 15px; }
+            .system-title { font-size: 22px; color: #0f4c5c; }
+            .info-section { margin-bottom: 15px; gap: 10px; }
+            .agent-info { padding: 8px 12px; background: none !important; border: 1px solid #000 !important; }
+            .agent-info .name { font-size: 16px; }
+            .balance-box { border: 1px solid #000; width: 180px; }
+            .balance-box-label { background-color: #f1f5f9 !important; color: #000 !important; border-bottom: 1px solid #000; padding: 5px; font-size: 11px; }
+            .balance-box-value { padding: 8px; font-size: 14px; background: #fff !important; color: #000 !important; }
+            table { margin-top: 10px; border: 1px solid #cbd5e1 !important; }
+            th { background-color: #f1f5f9 !important; color: #000 !important; border: 1px solid #cbd5e1 !important; padding: 6px 8px !important; font-size: 12px !important; }
+            td { border: 1px solid #cbd5e1 !important; padding: 5px 8px !important; font-size: 11px !important; line-height: 1.2 !important; background: #fff !important; color: #000 !important; }
+            .info-pill[contenteditable="true"], .editable-field[contenteditable="true"] { border: none !important; padding: 0 !important; background: none !important; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    
+    <div class="header">
+        <div class="header-branding">
+            <div class="system-title" id="main-system-title">Sanaa Naseer International Travel</div>
+            <div class="system-subtitle" id="main-system-subtitle">New Abbas China Plaza Matta Swat</div>
+        </div>
+        <div class="header-info">
+            <button class="theme-toggle-btn" onclick="downloadLedgerBackup()">⬇️ Backup</button>
+            <button class="theme-toggle-btn" onclick="document.getElementById('restore-ledger-file').click()">⬆️ Restore</button>
+            <input type="file" id="restore-ledger-file" accept=".json,application/json" style="display:none" onchange="restoreLedgerFile(this)">
+            <button class="theme-toggle-btn" onclick="changeLedgerPin()">🔐 Change Ledger PIN</button>
+            <button class="theme-toggle-btn" onclick="toggleTheme()" id="theme-btn">🌙 Dark Mode</button>
+            <div id="sync-status" class="sync-status sync-online">☁️ Supabase Cloud</div>
+            <div class="info-pill" id="header-email" onblur="saveHeaderEdit('email', this)">✉️ sanaanaseertravelagency@gmail.com</div>
+            <div class="info-pill" id="header-mobile" onblur="saveHeaderEdit('mobile', this)">📱 03495200044</div>
+            <div class="info-pill" id="header-phone" onblur="saveHeaderEdit('phone', this)">📞 03465818009</div>
+        </div>
+    </div>
+
+    <div class="workspace-grid">
+      <main class="workspace-main">
+    <!-- VIEW 1: DASHBOARD -->
+    <div id="dashboard-view" class="dashboard-section">
+        <div class="section-header">
+            <h2>📁 Agent Ledger Directory</h2>
+            <button class="btn btn-sm" onclick="toggleAgentModal(true)">➕ Add New Agent</button>
+        </div>
+        
+        <div class="search-container">
+            <input type="text" id="search-input" class="search-bar" placeholder="🔍 Search profiles by agency name or city..." oninput="renderDashboard()">
+        </div>
+
+        <div class="agent-grid" id="agent-cards-container"></div>
+    </div>
+
+    <!-- AGENT ADDITION MODAL -->
+    <div id="agent-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="toggleAgentModal(false)">&times;</button>
+            <div class="panel-title" style="margin-bottom: 20px; font-size: 16px;">Create New Agent Account</div>
+            
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="form-group">
+                    <label>Agent / Agency Name</label>
+                    <input type="text" id="new-agent-name" placeholder="e.g., SANA / SANA NASIR TRAVEL">
+                </div>
+                <div class="form-group">
+                    <label>City / Location</label>
+                    <input type="text" id="new-agent-city" placeholder="e.g., MATTA SWAT">
+                </div>
+                <div class="form-group">
+                    <label>Bank Name</label>
+                    <input type="text" id="new-agent-bank-name" placeholder="e.g., Meezan Bank / UBL / HBL">
+                </div>
+                <div class="form-group">
+                    <label>Account Title</label>
+                    <input type="text" id="new-agent-bank-title" placeholder="e.g., Sanaa Naseer Travel">
+                </div>
+                <div class="form-group">
+                    <label>Account / IBAN Number</label>
+                    <input type="text" id="new-agent-bank-acc" placeholder="e.g., PK64MEZN00010001001001">
+                </div>
+                <div class="form-group">
+                    <label>Email Address</label>
+                    <input type="email" id="new-agent-email" placeholder="agent@email.com">
+                </div>
+                <div class="form-group">
+                    <label>Mobile Number</label>
+                    <input type="text" id="new-agent-mobile" placeholder="e.g., 03410000000">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="new-agent-phone" placeholder="e.g., 03465818009">
+                </div>
+                <div style="text-align: right; margin-top: 10px;">
+                    <button class="btn" style="width: 100%;" onclick="createNewAgent()">✨ Add Agent Profile</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TRANSACTION EDIT MODAL -->
+    <div id="edit-tx-modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="close-modal" onclick="toggleEditModal(false)">&times;</button>
+            <div class="panel-title" style="margin-bottom: 20px; font-size: 16px;">Edit Transaction Entry</div>
+            
+            <input type="hidden" id="edit-tx-index">
+            <div style="display: flex; flex-direction: column; gap: 16px;">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="edit-tx-date">
+                </div>
+                <div class="form-group">
+                    <label>Name / Ref</label>
+                    <input type="text" id="edit-tx-name-ref" placeholder="Passenger or Client Name">
+                </div>
+                <div class="form-group">
+                    <label>Transaction Details / Description</label>
+                    <input type="text" id="edit-tx-details" placeholder="Description">
+                </div>
+                <div class="form-group">
+                    <label>Entry By * (Mandatory)</label>
+                    <select id="edit-tx-entry-by" required>
+                        <option value="" selected disabled>Select name</option>
+                        <option value="SAJID ALI">SAJID ALI</option>
+                        <option value="ABUBAKAR">ABUBAKAR</option>
+                        <option value="SANA ULLAH">SANA ULLAH</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="edit-tx-type">
+                        <option value="debit">Debit (+) Charge</option>
+                        <option value="credit">Credit (-) Payment</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Amount (PKR)</label>
+                    <input type="number" id="edit-tx-amount" min="0">
+                </div>
+                <div style="text-align: right; margin-top: 10px;">
+                    <button class="btn" style="width: 100%;" onclick="saveEditedTransaction()">💾 Update Entry</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- VIEW 2: INDIVIDUAL AGENT KHAATA -->
+    <div id="ledger-view" class="ledger-section">
+        
+        <div class="back-bar">
+            <button class="btn btn-secondary" onclick="showDashboard()">← Back to Dashboard</button>
+            <button class="btn btn-print" onclick="window.print()">🖨️ Print / Save Statement PDF</button>
+        </div>
+
+        <div class="info-section">
+            <div class="agent-info">
+                <h3>Account Holder</h3>
+                <div class="name" id="lbl-agent-name">---</div>
+                <div class="address" id="lbl-agent-city">---</div>
+            </div>
+
+            <!-- LIGHT-SHAKAL BANK SETTLEMENT BOX -->
+            <div class="bank-info-box">
+                <h3>💳 Bank Settlement Details</h3>
+                <div class="bank-details-grid">
+                    <span class="bank-label">Bank Name:</span>
+                    <span class="bank-value editable-field" id="lbl-bank-name" contenteditable="true" onblur="saveBankInfo('bankName', this)">Meezan Bank</span>
+                    
+                    <span class="bank-label">Acc Title:</span>
+                    <span class="bank-value editable-field" id="lbl-bank-title" contenteditable="true" onblur="saveBankInfo('bankTitle', this)">Sanaa Naseer Travel</span>
+                    
+                    <span class="bank-label">IBAN/Acc:</span>
+                    <span class="bank-value editable-field" id="lbl-bank-acc" contenteditable="true" style="font-family: monospace;" onblur="saveBankInfo('bankAcc', this)">01010101001100</span>
+                </div>
+            </div>
+
+            <!-- ALL DEBITS DISPLAY -->
+            <div class="balance-box">
+                <div class="balance-box-label" style="background-color: #166534;">Total Debits (+)</div>
+                <div class="balance-box-value" id="total-debit-display" style="color: #166534;">0.00</div>
+            </div>
+
+            <!-- ALL CREDITS DISPLAY -->
+            <div class="balance-box">
+                <div class="balance-box-label" style="background-color: #991b1b;">Total Credits (-)</div>
+                <div class="balance-box-value" id="total-credit-display" style="color: #991b1b;">0.00</div>
+            </div>
+            
+            <!-- NET BALANCE DISPLAY -->
+            <div class="balance-box">
+                <div class="balance-box-label">Current Net Balance</div>
+                <div class="balance-box-value" id="opening-balance-display">0.00</div>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div class="panel-title">Filter Statement Period</div>
+            <div class="panel-row">
+                <div class="form-group">
+                    <label>From Date:</label>
+                    <input type="date" id="filter-from-date" onchange="renderLedger()">
+                </div>
+                <div class="form-group">
+                    <label>To Date:</label>
+                    <input type="date" id="filter-to-date" onchange="renderLedger()">
+                </div>
+                <button class="btn btn-secondary" onclick="resetDateFilter()">Reset Filters</button>
+            </div>
+        </div>
+
+        <div class="control-panel">
+            <div class="panel-title">
+                <span>Post New Transaction Entry</span>
+                <button type="button" class="btn btn-sm btn-accent" onclick="addMultiEntryRow()">➕ Multi Entry Row</button>
+            </div>
+            
+            <div class="panel-row" id="single-entry-row">
+                <div class="form-group">
+                    <label>Date</label>
+                    <input type="date" id="tx-date" required>
+                </div>
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="tx-name-ref" placeholder="Passenger or Client Name">
+                </div>
+                <div class="form-group wide">
+                    <label>Transaction Details / Description</label>
+                    <input type="text" id="tx-details" placeholder="e.g., Flight Tickets, Visa Fees, Cash Received" required>
+                </div>
+                <div class="form-group">
+                    <label>Entry By * (Mandatory)</label>
+                    <select id="tx-entry-by" required>
+                        <option value="" selected disabled>Select name</option>
+                        <option value="SAJID ALI">SAJID ALI</option>
+                        <option value="ABUBAKAR">ABUBAKAR</option>
+                        <option value="SANA ULLAH">SANA ULLAH</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Type</label>
+                    <select id="tx-type">
+                        <option value="debit">Debit (+) Charge</option>
+                        <option value="credit">Credit (-) Payment</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Amount (PKR)</label>
+                    <input type="number" id="tx-amount" min="0" placeholder="0" required>
+                </div>
+                <button type="button" class="btn" onclick="addTransaction()">Post Entry</button>
+            </div>
+
+            <div id="multi-entries-container" class="multi-entries-container" style="display: none;">
+                <div style="font-weight: bold; font-size: 13px; color: var(--accent-color); margin-bottom: 5px;">Multiple Entries Queue:</div>
+                <div id="multi-entries-list"></div>
+                <div style="text-align: right; margin-top: 10px; display: flex; gap: 10px; justify-content: flex-end;">
+                    <button type="button" class="btn btn-secondary btn-sm" onclick="clearMultiEntries()">Cancel All</button>
+                    <button type="button" class="btn btn-accent btn-sm" onclick="postMultipleEntries()">Post All Entries</button>
+                </div>
+            </div>
+        </div>
+
+        <table id="ledger-table">
+            <thead>
+                <tr>
+                    <th style="width: 6%; text-align: center;">Sr.No</th>
+                    <th style="width: 12%; text-align: center;">Date</th>
+                    <th style="width: 15%; text-align: center;">Name</th>
+                    <th style="width: 23%;">Transaction Statement / Description</th>
+                    <th style="width: 10%; text-align: center;">Entry By</th>
+                    <th style="width: 10%; text-align: center;">Debit (+)</th>
+                    <th style="width: 11%; text-align: center;">Credit (-)</th>
+                    <th style="width: 12%; text-align: right;">Running Balance</th>
+                    <th class="delete-col" style="width: 8%; text-align: center;">Action</th>
+                </tr>
+            </thead>
+            <tbody id="ledger-body"></tbody>
+        </table>
+    </div>
+      </main>
+      <aside class="activity-panel" aria-label="Activity history">
+        <div class="activity-heading">
+          <h2>🕘 Daily Activity History</h2>
+          <p>تمام اہم تبدیلیاں یہاں تاریخ اور وقت کے ساتھ محفوظ ہوں گی</p>
+        </div>
+        <div class="activity-tools">
+          <input type="date" id="activity-date-filter" aria-label="Filter activity by date" onchange="renderActivity()">
+        </div>
+        <div class="activity-count" id="activity-count">0 activities</div>
+        <div class="activity-list" id="activity-list">
+          <div class="activity-empty">ابھی کوئی سرگرمی موجود نہیں</div>
+        </div>
+      </aside>
+    </div>
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+<style>
+:root {--primary-color:#173b69!important;--primary-light:#eaf0f8!important}
+#cloud-auth {position:fixed;inset:0;background:#eef3f9;z-index:99999;display:flex;align-items:center;justify-content:center;padding:18px;font-family:Inter,system-ui,sans-serif}
+.auth-panel{width:min(440px,100%);background:white;border:1px solid #dbe3ee;border-radius:18px;padding:28px;box-shadow:0 20px 60px #142c4b20}
+.auth-panel h2{margin:0 0 6px;color:#173b69}.auth-panel p{color:#64748b;line-height:1.5}
+.auth-panel input{width:100%;padding:12px;margin:7px 0;border:1px solid #cbd5e1;border-radius:9px;box-sizing:border-box}
+.auth-panel button{width:100%;padding:12px;border:0;border-radius:9px;background:#173b69;color:white;font-weight:700;cursor:pointer;margin-top:8px}
+#auth-error{color:#b91c1c;white-space:pre-wrap;font-size:13px}
+#cloud-signout{position:fixed;bottom:12px;right:12px;z-index:2000;background:#173b69;color:#fff;border:0;padding:9px 14px;border-radius:9px;cursor:pointer}
+</style>
+<div id="cloud-auth">
+ <div class="auth-panel"><h2>Professional Cloud Ledger</h2><p>Sign in to securely access your accounts and transactions.</p>
+ <input id="sb-url" placeholder="Supabase Project URL (https://...supabase.co)" autocomplete="url">
+ <input id="sb-key" placeholder="Supabase Publishable / anon key">
+ <input id="sb-email" type="email" placeholder="Email address" autocomplete="email">
+ <input id="sb-password" type="password" placeholder="Password" autocomplete="current-password">
+ <button onclick="cloudLogin(false)">Sign in</button><button onclick="cloudLogin(true)" style="background:#eaf0f8;color:#173b69">Create account</button>
+ <p id="auth-error"></p><p style="font-size:12px">Your Supabase URL and public key are stored in this browser. Never paste a service_role or secret key here.</p></div>
+</div>
+<button id="cloud-signout" hidden onclick="cloudSignout()">Sign out</button>
+<script>
+let sb=null, sbUser=null;
+const $id=id=>document.getElementById(id);
+$id('sb-url').value='https://wgyszdgdvybsgdvapwph.supabase.co';
+$id('sb-key').value='sb_publishable_FvH7wppDAx3_EB6uE6Mh3Q_WsSyzEAP';
+function cloudClient(){
+ const url=$id('sb-url').value.trim(),key=$id('sb-key').value.trim();
+ if(!/^https:\/\/[a-z0-9-]+\.supabase\.co\/?$/.test(url))throw Error('Enter a valid Supabase project URL.');
+ if(!key||key.startsWith('sb_secret_'))throw Error('Use only the public publishable / anon key.');
+ localStorage.setItem('ledger_sb_url',url);localStorage.setItem('ledger_sb_key',key);
+ sb=window.supabase.createClient(url,key,{auth:{persistSession:true,autoRefreshToken:true}});
+}
+async function cloudLogin(create){
+ try{
+  $id('auth-error').textContent='';
+  cloudClient();
+  const email=$id('sb-email').value.trim(),password=$id('sb-password').value;
+  if(!email||!password)throw Error('Enter email and password.');
+  const {data,error}=create?await sb.auth.signUp({email,password}):await sb.auth.signInWithPassword({email,password});
+  if(error)throw error;
+  if(!data.session){$id('auth-error').textContent='Account created. Confirm your email, then sign in.';return;}
+  sbUser=data.user;$id('cloud-auth').style.display='none';$id('cloud-signout').hidden=false;
+  if(typeof loadFromCloud==='function')loadFromCloud();
+ }catch(e){$id('auth-error').textContent=e.message;}
+}
+async function cloudSignout(){
+ if(sb)await sb.auth.signOut();sbUser=null;location.reload();
+}
+async function tryExistingSession(){
+ try{
+  if(!$id('sb-url').value||!$id('sb-key').value)return;
+  cloudClient();const {data}=await sb.auth.getUser();
+  if(data?.user){sbUser=data.user;$id('cloud-auth').style.display='none';$id('cloud-signout').hidden=false;loadFromCloud();}
+ }catch(e){$id('auth-error').textContent=e.message;}
+}
+const emptyLedger=()=>({database:{},agentOrder:[],activityLog:[]});
+async function getLedger(){
+ if(!sbUser)throw Error('Sign in first');
+ let {data,error}=await sb.from('ledgers').select('data,version').eq('user_id',sbUser.id).maybeSingle();
+ if(error)throw error;
+ if(!data){
+  const ins=await sb.from('ledgers').upsert({user_id:sbUser.id,data:emptyLedger(),version:1},{onConflict:'user_id',ignoreDuplicates:true});
+  if(ins.error)throw ins.error;
+  const r=await sb.from('ledgers').select('data,version').eq('user_id',sbUser.id).single();
+  if(r.error)throw r.error;data=r.data;
+ }
+ return {...data.data,_ledgerVersion:data.version};
+}
+async function saveLedger(payload){
+ const value=JSON.parse(payload),expected=Number(value._ledgerVersion);
+ delete value._ledgerVersion;delete value._confirmedDeletedAgentIds;delete value._confirmedDeletedTransactions;delete value._deleteAuthorizationPassword;
+ const {data,error}=await sb.rpc('ledger_commit',{expected_version:expected,new_data:value});
+ if(error)throw error;
+ return data;
+}
+async function exportBackup(){
+ const data=await getLedger();
+ const version=data._ledgerVersion;delete data._ledgerVersion;
+ return {format:'SANAA_LEDGER_BACKUP_V1',createdAt:new Date().toISOString(),version,data};
+}
+async function restoreBackup(json,expected){
+ const backup=JSON.parse(json);
+ if(backup?.format!=='SANAA_LEDGER_BACKUP_V1'||!backup.data||!backup.data.database||Array.isArray(backup.data.database)||!Array.isArray(backup.data.agentOrder))throw Error('Invalid backup format');
+ // Read the latest cloud copy and refuse a stale merge, to avoid overwriting changes.
+ const current=await getLedger();
+ if(current._ledgerVersion!==Number(expected))return {status:'conflict',message:'Cloud ledger changed. Refresh before merging.'};
+ const merged=structuredClone(current);delete merged._ledgerVersion;
+ let accounts=0,transactions=0;
+ for(const [id,agent] of Object.entries(backup.data.database)){
+   if(!agent||typeof agent!=='object')continue;
+   if(!merged.database[id]){
+     merged.database[id]=structuredClone(agent);
+     accounts++;
+     transactions+=Array.isArray(agent.transactions)?agent.transactions.length:0;
+   }else{
+     const target=merged.database[id];
+     if(!Array.isArray(target.transactions))target.transactions=[];
+     const fingerprint=tx=>JSON.stringify([tx.date,tx.nameRef,tx.details,tx.entryBy,tx.type,tx.amount]);
+     const existing=new Set(target.transactions.map(fingerprint));
+     for(const tx of (Array.isArray(agent.transactions)?agent.transactions:[])){
+       const fp=fingerprint(tx);
+       if(!existing.has(fp)){target.transactions.push(structuredClone(tx));existing.add(fp);transactions++;}
+     }
+   }
+ }
+ merged.agentOrder=Array.from(new Set([...(Array.isArray(merged.agentOrder)?merged.agentOrder:[]),...backup.data.agentOrder,...Object.keys(merged.database)])).filter(id=>merged.database[id]);
+ // Keep the existing PIN, branding, activity history and all other cloud settings.
+ const {data,error}=await sb.rpc('ledger_commit',{expected_version:Number(expected),new_data:merged});
+ if(error)throw error;
+ return {...data,accounts,transactions};
+}
+
+window.google={script:{run:{
+ withSuccessHandler(success){
+  return {withFailureHandler(fail){
+   const invoke=(method,args)=>Promise.resolve().then(()=>method(...args)).then(success).catch(fail);
+   return {
+    getDatabase:()=>invoke(getLedger,[]),
+    saveDatabase:p=>invoke(saveLedger,[p]),
+    exportLedgerBackup:()=>invoke(exportBackup,[]),
+    restoreLedgerBackup:(j,v)=>invoke(restoreBackup,[j,v])
+   };
+  }};
+ }
+}}};
+</script>
+
+<script>
+    // The ledger PIN is separate from Supabase authentication.
+    async function pinDigest(pin) {
+        const bytes = new TextEncoder().encode('SanaaLedgerPinV1:' + pin);
+        const digest = await crypto.subtle.digest('SHA-256', bytes);
+        return Array.from(new Uint8Array(digest), b => b.toString(16).padStart(2, '0')).join('');
+    }
+    async function verifyLedgerPin(message) {
+        const pin = prompt(message || 'Enter Ledger PIN:');
+        if (pin === null) return false;
+        const expected = appData.ledgerPinHash || await pinDigest('1234');
+        if (await pinDigest(pin) !== expected) { alert('Incorrect Ledger PIN. Action cancelled.'); return false; }
+        return true;
+    }
+    async function changeLedgerPin() {
+        if (ledgerDirty || ledgerSaving || ledgerConflict || ledgerVersion === null) { alert('Wait for cloud sync before changing the PIN.'); return; }
+        if (!await verifyLedgerPin('Enter current Ledger PIN:')) return;
+        const pin = prompt('Enter new Ledger PIN (at least 4 digits):');
+        if (pin === null) return;
+        if (!/^\d{4,12}$/.test(pin)) { alert('PIN must contain 4 to 12 digits.'); return; }
+        const again = prompt('Confirm new Ledger PIN:');
+        if (again === null) return;
+        if (pin !== again) { alert('PINs do not match.'); return; }
+        appData.ledgerPinHash = await pinDigest(pin);
+        logActivity('security', 'Ledger PIN changed', 'Ledger access PIN updated', 'edit');
+        saveToCloud();
+        alert('New Ledger PIN saved. Wait for cloud sync confirmation.');
+    }
+    const MASTER_DEFAULTS = {
+        name: "Sanaa Naseer International Travel",
+        subtitle: "New Abbas China Plaza Matta Swat",
+        email: "samaanaseertravelagency@gmail.com",
+        mobile: "03495200044",
+        phone: "03465818009"
+    };
+
+    let currentAgentId = null;
+    let appData = { database: {}, agentOrder: [], activityLog: [] };
+    let lastSelectedMultiDate = new Date().toISOString().split('T')[0];
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        document.documentElement.setAttribute('data-theme', newTheme);
+        document.getElementById('theme-btn').innerText = newTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+        localStorage.setItem('theme', newTheme);
+    }
+
+    // Apply saved theme on load
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    document.getElementById('theme-btn').innerText = savedTheme === 'dark' ? '☀️ Light Mode' : '🌙 Dark Mode';
+
+    function setSyncStatus(status, text) {
+        const statusEl = document.getElementById('sync-status');
+        statusEl.className = 'sync-status ' + (status === 'saving' ? 'sync-saving' : status === 'error' ? 'sync-error' : 'sync-online');
+        statusEl.innerText = text;
+    }
+
+
+    function logActivity(action, title, detail, category) {
+        if (!Array.isArray(appData.activityLog)) appData.activityLog = [];
+        const now = new Date();
+        appData.activityLog.unshift({
+            id: 'act_' + now.getTime() + '_' + Math.random().toString(36).slice(2, 7),
+            timestamp: now.toISOString(),
+            action: action || 'activity',
+            title: title || 'Activity',
+            detail: detail || '',
+            category: category || 'info',
+            agent: currentAgentId && appData.database[currentAgentId]
+                ? appData.database[currentAgentId].name : ''
+        });
+        appData.activityLog = appData.activityLog.slice(0, 500);
+        renderActivity();
+    }
+
+    function renderActivity() {
+        const list = document.getElementById('activity-list');
+        const count = document.getElementById('activity-count');
+        if (!list || !count) return;
+        const filter = document.getElementById('activity-date-filter')?.value || '';
+        const logs = Array.isArray(appData.activityLog) ? appData.activityLog : [];
+        const filtered = logs.filter(item => {
+            if (!filter) return true;
+            const date = item.timestamp ? new Date(item.timestamp) : null;
+            if (!date || isNaN(date.getTime())) return false;
+            const localDate = new Date(date.getTime() - date.getTimezoneOffset() * 60000).toISOString().slice(0,10);
+            return localDate === filter;
+        });
+        count.textContent = filtered.length + ' activit' + (filtered.length === 1 ? 'y' : 'ies');
+        list.innerHTML = '';
+        if (!filtered.length) {
+            list.innerHTML = '<div class="activity-empty">اس تاریخ کی کوئی سرگرمی موجود نہیں</div>';
+            return;
+        }
+        filtered.forEach(item => {
+            const date = item.timestamp ? new Date(item.timestamp) : new Date();
+            const timeText = isNaN(date.getTime()) ? '' : date.toLocaleString();
+            const card = document.createElement('div');
+            card.className = 'activity-item activity-' + (item.category || 'info');
+            const meta = document.createElement('div');
+            meta.className = 'activity-meta';
+            meta.textContent = timeText;
+            const title = document.createElement('div');
+            title.className = 'activity-title';
+            title.textContent = item.title || item.action || 'Activity';
+            const detail = document.createElement('div');
+            detail.className = 'activity-detail';
+            detail.textContent = [item.agent, item.detail].filter(Boolean).join(' · ');
+            card.append(meta, title, detail);
+            list.appendChild(card);
+        });
+    }
+
+    // Never replace local unsaved data during an 8-second refresh.
+    let ledgerDirty = false, ledgerSaving = false, ledgerLoading = false, ledgerConflict = false;
+    let ledgerVersion = null;
+    let ledgerQueued = false;
+    let confirmedDeletedAgentIds = [];
+    let confirmedDeletedTransactions = [];
+    let pendingDeleteAuthorizationPassword = '';
+    function loadFromCloud() {
+        if (!sbUser) return;
+        if (ledgerDirty || ledgerSaving || ledgerLoading || ledgerConflict) return;
+        ledgerLoading = true;
+        google.script.run.withSuccessHandler(function(data) {
+            ledgerLoading = false;
+            if (!data || !data.database) {
+                setSyncStatus('error', '⚠️ No valid saved data — no reset');
+                return;
+            }
+            if (ledgerDirty || ledgerSaving || ledgerConflict) return;
+            ledgerVersion = data._ledgerVersion;
+            appData = data;
+            if (!Array.isArray(appData.activityLog)) appData.activityLog = [];
+            setSyncStatus('online', '☁️ Supabase synced');
+            renderActivity();
+            if (currentAgentId) renderLedger(); else renderDashboard();
+        }).withFailureHandler(function(err) {
+            ledgerLoading = false;
+            setSyncStatus('error', '⚠️ Sync Failed');
+        }).getDatabase();
+    }
+    function saveToCloud() {
+        ledgerDirty = true;
+        ledgerQueued = true;
+        if (ledgerSaving || ledgerConflict || ledgerVersion === null) {
+            setSyncStatus('error', ledgerVersion === null ? '⚠️ Cloud not loaded — save paused' : '⏳ Save pending');
+            return;
+        }
+        ledgerSaving = true;
+        ledgerQueued = false;
+        const payload = JSON.stringify({...appData, _ledgerVersion: ledgerVersion, _confirmedDeletedAgentIds: confirmedDeletedAgentIds, _confirmedDeletedTransactions: confirmedDeletedTransactions, _deleteAuthorizationPassword: pendingDeleteAuthorizationPassword});
+        const sentAgentDeletes = confirmedDeletedAgentIds.slice();
+        const sentTxDeletes = confirmedDeletedTransactions.slice();
+        setSyncStatus('saving', '⏳ Saving...');
+        google.script.run.withSuccessHandler(function(res) {
+            ledgerSaving = false;
+            if (!res || res.status !== 'success') {
+                ledgerConflict = !!(res && res.status === 'conflict');
+                setSyncStatus('error', ledgerConflict ? '⚠️ Conflict: local changes kept — do not reload' : '⚠️ Save failed: ' + (res && res.message || 'Unknown error'));
+                return;
+            }
+            ledgerVersion = res.version;
+            pendingDeleteAuthorizationPassword = '';
+            confirmedDeletedAgentIds = confirmedDeletedAgentIds.slice(sentAgentDeletes.length);
+            confirmedDeletedTransactions = confirmedDeletedTransactions.slice(sentTxDeletes.length);
+            if (ledgerQueued) { saveToCloud(); return; }
+            ledgerDirty = false;
+            setSyncStatus('online', '☁️ Saved & verified');
+        }).withFailureHandler(function(err) {
+            ledgerSaving = false;
+            setSyncStatus('error', '⚠️ Save failed — local changes kept');
+        }).saveDatabase(payload);
+    }
+
+    document.getElementById('tx-date').valueAsDate = new Date();
+
+    function calculateAgentStats(agentId) {
+        let totalDebit = 0, totalCredit = 0;
+        if (appData.database[agentId] && appData.database[agentId].transactions) {
+            appData.database[agentId].transactions.forEach(tx => {
+                if(tx.type === 'debit') totalDebit += tx.amount;
+                else totalCredit += tx.amount;
+            });
+        }
+        return { debit: totalDebit, credit: totalCredit, balance: totalDebit - totalCredit };
+    }
+
+    function toggleAgentModal(show) {
+        document.getElementById('agent-modal').style.display = show ? 'flex' : 'none';
+    }
+
+    function toggleEditModal(show) {
+        document.getElementById('edit-tx-modal').style.display = show ? 'flex' : 'none';
+    }
+
+    function updateHeaderBranding(profile, isEditable = false) {
+        document.getElementById('main-system-title').innerText = profile.name;
+        document.getElementById('main-system-subtitle').innerText = profile.subtitle || profile.city || '';
+        
+        const emailEl = document.getElementById('header-email');
+        const mobileEl = document.getElementById('header-mobile');
+        const phoneEl = document.getElementById('header-phone');
+
+        emailEl.innerText = profile.email ? `✉️ ${profile.email}` : "✉️ --";
+        mobileEl.innerText = profile.mobile ? `📱 ${profile.mobile}` : "📱 --";
+        phoneEl.innerText = profile.phone ? `📞 ${profile.phone}` : "📞 --";
+
+        if (isEditable) {
+            emailEl.setAttribute('contenteditable', 'true');
+            mobileEl.setAttribute('contenteditable', 'true');
+            phoneEl.setAttribute('contenteditable', 'true');
+        } else {
+            emailEl.removeAttribute('contenteditable');
+            mobileEl.removeAttribute('contenteditable');
+            phoneEl.removeAttribute('contenteditable');
+        }
+    }
+
+    function saveHeaderEdit(field, element) {
+        if (!currentAgentId) return;
+        let text = element.innerText;
+        if (field === 'email') text = text.replace('✉️ ', '').trim();
+        if (field === 'mobile') text = text.replace('📱 ', '').trim();
+        if (field === 'phone') text = text.replace('📞 ', '').trim();
+        if (text === '--') text = '';
+
+        appData.database[currentAgentId][field] = text;
+        logActivity('edit', 'Contact information updated', field + ': ' + text, 'edit');
+        saveToCloud();
+    }
+
+    function saveBankInfo(field, element) {
+        if (!currentAgentId) return;
+        let text = element.innerText.trim();
+        appData.database[currentAgentId][field] = text;
+        logActivity('edit', 'Bank details updated', field + ': ' + text, 'edit');
+        saveToCloud();
+    }
+
+    function renderDashboard() {
+        updateHeaderBranding(MASTER_DEFAULTS, false);
+        const grid = document.getElementById('agent-cards-container');
+        const searchQuery = document.getElementById('search-input').value.toLowerCase().trim();
+        grid.innerHTML = '';
+
+        if (!appData.agentOrder) appData.agentOrder = [];
+        appData.agentOrder = appData.agentOrder.filter(id => appData.database[id]);
+        Object.keys(appData.database).forEach(id => { if (!appData.agentOrder.includes(id)) appData.agentOrder.push(id); });
+
+        appData.agentOrder.forEach(id => {
+            const agent = appData.database[id];
+            if (!agent) return;
+            if (searchQuery && !agent.name.toLowerCase().includes(searchQuery) && !agent.city.toLowerCase().includes(searchQuery)) return;
+
+            const stats = calculateAgentStats(id);
+            const balClass = stats.balance >= 0 ? 'balance-receivable' : 'balance-advance';
+            const balStatus = stats.balance >= 0 ? 'Receivable' : 'Advance';
+
+            const card = document.createElement('div');
+            card.className = 'agent-card';
+            card.setAttribute('draggable', 'true');
+            card.setAttribute('data-id', id);
+
+            card.onclick = (e) => { if (!e.target.classList.contains('delete-card-btn')) openLedger(id); };
+
+            card.innerHTML = `
+                <button class="delete-card-btn" onclick="deleteAgent(event, '${id}')">Delete</button>
+                <h3>${agent.name}</h3>
+                <p>📍 <b>City:</b> ${agent.city}</p>
+                <p>📱 <b>Mob:</b> ${agent.mobile || '-'}</p>
+                <div class="drag-indicator">⋮⋮</div>
+                <div class="card-stats">
+                    <span>Total Dr: <b>${stats.debit.toLocaleString('en-US')}</b></span>
+                    <span>Total Cr: <b>${stats.credit.toLocaleString('en-US')}</b></span>
+                </div>
+                <div class="card-balance ${balClass}">
+                    PKR ${Math.abs(stats.balance).toLocaleString('en-US', {minimumFractionDigits: 2})} <span style="font-size:10px;">(${balStatus})</span>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        initializeDragAndDrop();
+    }
+
+    function initializeDragAndDrop() {
+        const grid = document.getElementById('agent-cards-container');
+        const cards = grid.querySelectorAll('.agent-card');
+
+        cards.forEach(card => {
+            card.addEventListener('dragstart', () => { setTimeout(() => card.classList.add('dragging'), 0); });
+            card.addEventListener('dragend', () => {
+                card.classList.remove('dragging');
+                const updatedCards = Array.from(grid.querySelectorAll('.agent-card'));
+                appData.agentOrder = updatedCards.map(c => c.getAttribute('data-id'));
+                saveToCloud();
+            });
+        });
+
+        grid.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            const draggingCard = grid.querySelector('.dragging');
+            if (!draggingCard) return;
+            const siblings = Array.from(grid.querySelectorAll('.agent-card:not(.dragging)'));
+            const nextSibling = siblings.find(sibling => {
+                const box = sibling.getBoundingClientRect();
+                return e.clientY < box.bottom && e.clientX < box.right;
+            });
+            if (nextSibling) grid.insertBefore(draggingCard, nextSibling);
+            else grid.appendChild(draggingCard);
+        });
+    }
+
+    function createNewAgent() {
+        const name = document.getElementById('new-agent-name').value.trim();
+        const city = document.getElementById('new-agent-city').value.trim();
+        if(!name || !city) { alert("Please provide Agent Name and City."); return; }
+
+        const newId = 'agent_' + Date.now();
+        appData.database[newId] = {
+            id: newId, 
+            name: name.toUpperCase(), 
+            city: city.toUpperCase(),
+            email: document.getElementById('new-agent-email').value.trim(),
+            mobile: document.getElementById('new-agent-mobile').value.trim(),
+            phone: document.getElementById('new-agent-phone').value.trim(),
+            bankName: document.getElementById('new-agent-bank-name').value.trim() || 'Click to Edit Bank',
+            bankTitle: document.getElementById('new-agent-bank-title').value.trim() || 'Click to Edit Title',
+            bankAcc: document.getElementById('new-agent-bank-acc').value.trim() || 'Click to Edit Account',
+            transactions: []
+        };
+
+        appData.agentOrder.push(newId);
+        logActivity('add', 'New agent created', name.toUpperCase() + ' · ' + city.toUpperCase(), 'add');
+        saveToCloud();
+        toggleAgentModal(false);
+        renderDashboard();
+    }
+
+    async function deleteAgent(event, id) {
+        event.stopPropagation();
+        if (!await verifyLedgerPin("Enter Ledger PIN to delete this agent:")) return;
+        if(confirm(`Permanently delete "${appData.database[id].name}"?`)) {
+            const deletedName = appData.database[id].name;
+            confirmedDeletedAgentIds.push(id);
+            confirmedDeletedTransactions = confirmedDeletedTransactions.filter(d => d.agentId !== id);
+            delete appData.database[id];
+            appData.agentOrder = appData.agentOrder.filter(item => item !== id);
+            logActivity('delete', 'Agent deleted', deletedName, 'delete');
+            saveToCloud();
+            renderDashboard();
+        }
+    }
+
+    function openLedger(id) {
+        currentAgentId = id;
+        const agentProfile = appData.database[id];
+        updateHeaderBranding(agentProfile, true);
+
+        document.getElementById('dashboard-view').style.display = 'none';
+        document.getElementById('ledger-view').style.display = 'block';
+        document.getElementById('lbl-agent-name').innerText = agentProfile.name;
+        document.getElementById('lbl-agent-city').innerText = agentProfile.city;
+
+        document.getElementById('lbl-bank-name').innerText = agentProfile.bankName || 'Click to Edit Bank';
+        document.getElementById('lbl-bank-title').innerText = agentProfile.bankTitle || 'Click to Edit Title';
+        document.getElementById('lbl-bank-acc').innerText = agentProfile.bankAcc || 'Click to Edit Account';
+
+        clearMultiEntries();
+        resetDateFilter();
+        renderLedger();
+    }
+
+    function showDashboard() {
+        currentAgentId = null;
+        document.getElementById('ledger-view').style.display = 'none';
+        document.getElementById('dashboard-view').style.display = 'block';
+        renderDashboard();
+    }
+
+    function renderLedger() {
+        if(!currentAgentId) return;
+        const tbody = document.getElementById('ledger-body');
+        tbody.innerHTML = '';
+        
+        let runningBalance = 0, totalDebitSum = 0, totalCreditSum = 0, visibleRowIndex = 1;
+        const fromFilter = document.getElementById('filter-from-date').value;
+        const toFilter = document.getElementById('filter-to-date').value;
+
+        if (appData.database[currentAgentId] && appData.database[currentAgentId].transactions) {
+            appData.database[currentAgentId].transactions.forEach((tx, index) => {
+                let debitStr = "-", creditStr = "-";
+                if (tx.type === 'debit') { 
+                    runningBalance += tx.amount; 
+                    totalDebitSum += tx.amount;
+                    debitStr = tx.amount.toLocaleString('en-US'); 
+                } else { 
+                    runningBalance -= tx.amount; 
+                    totalCreditSum += tx.amount;
+                    creditStr = tx.amount.toLocaleString('en-US'); 
+                }
+
+                if (fromFilter && tx.date < fromFilter) return;
+                if (toFilter && tx.date > toFilter) return;
+
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td class="text-center">${visibleRowIndex}</td>
+                    <td class="text-center">${tx.date.split('-').reverse().join('-')}</td>
+                    <td class="text-center" style="font-weight: 600; color: var(--primary-color);">${tx.nameRef || '-'}</td>
+                    <td>${tx.details}</td>
+                    <td class="text-center">${tx.entryBy || '-'}</td>
+                    <td class="text-center" style="color: #166534;">${debitStr !== '-' ? '+ ' + debitStr : '-'}</td>
+                    <td class="text-center" style="color: #991b1b;">${creditStr !== '-' ? '- ' + creditStr : '-'}</td>
+                    <td class="text-right"><strong>${runningBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}</strong></td>
+                    <td class="text-center delete-col">
+                        <div class="action-btn-group">
+                            <button class="edit-row-btn" onclick="editTransaction(${index})">Edit</button>
+                            <button class="delete-row-btn" onclick="deleteTransaction(${index})">Delete</button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(row);
+                visibleRowIndex++;
+            });
+        }
+
+        document.getElementById('total-debit-display').innerText = totalDebitSum.toLocaleString('en-US', {minimumFractionDigits: 2}) + " PKR";
+        document.getElementById('total-credit-display').innerText = totalCreditSum.toLocaleString('en-US', {minimumFractionDigits: 2}) + " PKR";
+        document.getElementById('opening-balance-display').innerText = runningBalance.toLocaleString('en-US', {minimumFractionDigits: 2}) + " PKR";
+    }
+
+    const ALLOWED_ENTRY_BY = ['SAJID ALI', 'ABUBAKAR', 'SANA ULLAH'];
+    function isAllowedEntryBy(name) {
+        return ALLOWED_ENTRY_BY.includes(String(name || '').trim().toUpperCase());
+    }
+
+    function addTransaction() {
+        if(!currentAgentId) return;
+        const date = document.getElementById('tx-date').value;
+        const nameRef = document.getElementById('tx-name-ref').value.trim().toUpperCase();
+        const details = document.getElementById('tx-details').value.trim();
+        const entryBy = document.getElementById('tx-entry-by').value;
+        const type = document.getElementById('tx-type').value;
+        const amount = parseFloat(document.getElementById('tx-amount').value);
+
+        if(!date || !details || !isAllowedEntryBy(entryBy) || isNaN(amount) || amount <= 0) { alert("Please select a valid Entry By name and fill out all required fields."); return; }
+
+        appData.database[currentAgentId].transactions.push({ date, nameRef, details, entryBy, type, amount });
+        logActivity('add', type === 'credit' ? 'Payment received' : 'New debit entry', entryBy + ' · ' + (nameRef ? nameRef + ' · ' : '') + details + ' · PKR ' + amount.toLocaleString('en-US'), 'add');
+        appData.database[currentAgentId].transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        saveToCloud();
+        document.getElementById('tx-name-ref').value = '';
+        document.getElementById('tx-details').value = '';
+        document.getElementById('tx-amount').value = '';
+        document.getElementById('tx-entry-by').value = '';
+        document.getElementById('tx-date').valueAsDate = new Date();
+        renderLedger();
+    }
+
+    async function editTransaction(index) {
+        if (!await verifyLedgerPin("Enter Ledger PIN to edit this entry:")) return;
+
+        const tx = appData.database[currentAgentId].transactions[index];
+        if (!tx) return;
+
+        document.getElementById('edit-tx-index').value = index;
+        document.getElementById('edit-tx-date').value = tx.date;
+        document.getElementById('edit-tx-name-ref').value = tx.nameRef || '';
+        document.getElementById('edit-tx-details').value = tx.details || '';
+        document.getElementById('edit-tx-entry-by').value = isAllowedEntryBy(tx.entryBy) ? tx.entryBy.toUpperCase() : '';
+        document.getElementById('edit-tx-type').value = tx.type;
+        document.getElementById('edit-tx-amount').value = tx.amount;
+
+        toggleEditModal(true);
+    }
+
+    function saveEditedTransaction() {
+        if(!currentAgentId) return;
+
+        const index = parseInt(document.getElementById('edit-tx-index').value);
+        const date = document.getElementById('edit-tx-date').value;
+        const nameRef = document.getElementById('edit-tx-name-ref').value.trim().toUpperCase();
+        const details = document.getElementById('edit-tx-details').value.trim();
+        const entryBy = document.getElementById('edit-tx-entry-by').value;
+        const type = document.getElementById('edit-tx-type').value;
+        const amount = parseFloat(document.getElementById('edit-tx-amount').value);
+
+        if(!date || !details || !isAllowedEntryBy(entryBy) || isNaN(amount) || amount <= 0) {
+            alert("Please select a valid Entry By name and fill out Date, Details, and Amount properly.");
+            return;
+        }
+
+        appData.database[currentAgentId].transactions[index] = { date, nameRef, details, entryBy, type, amount };
+        logActivity('edit', 'Transaction updated', entryBy + ' · ' + (nameRef ? nameRef + ' · ' : '') + details + ' · PKR ' + amount.toLocaleString('en-US'), 'edit');
+        appData.database[currentAgentId].transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+        saveToCloud();
+        toggleEditModal(false);
+        renderLedger();
+    }
+
+    function addMultiEntryRow() {
+        const container = document.getElementById('multi-entries-container');
+        const list = document.getElementById('multi-entries-list');
+        document.getElementById('single-entry-row').style.display = 'none';
+        container.style.display = 'block';
+
+        const defaultDate = lastSelectedMultiDate;
+
+        const row = document.createElement('div');
+        row.className = 'multi-entry-row';
+        row.innerHTML = `
+            <input type="date" class="multi-tx-date" value="${defaultDate}" required onchange="updateLastMultiDate(this)">
+            <input type="text" class="multi-tx-name" placeholder="Passenger/Client Name" style="text-transform: uppercase; padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px;">
+            <input type="text" class="multi-tx-details" placeholder="Transaction Details / Description" required style="padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px;">
+            <select class="multi-tx-entry-by" required style="padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px;">
+                <option value="" selected disabled>Entry By *</option>
+                <option value="SAJID ALI">SAJID ALI</option>
+                <option value="ABUBAKAR">ABUBAKAR</option>
+                <option value="SANA ULLAH">SANA ULLAH</option>
+            </select>
+            <select class="multi-tx-type" style="padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px;">
+                <option value="debit">Debit (+)</option>
+                <option value="credit">Credit (-)</option>
+            </select>
+            <input type="number" class="multi-tx-amount" min="0" placeholder="Amount" required style="padding: 6px 10px; border: 1px solid var(--border-color); border-radius: 6px;">
+            <button type="button" class="delete-row-btn" onclick="removeMultiRow(this)" style="padding: 6px 10px;">❌</button>
+        `;
+        list.appendChild(row);
+    }
+
+    function updateLastMultiDate(inputElement) {
+        if(inputElement.value) {
+            lastSelectedMultiDate = inputElement.value;
+            
+            const list = document.getElementById('multi-entries-list');
+            const rows = Array.from(list.querySelectorAll('.multi-entry-row'));
+            const currentIdx = rows.indexOf(inputElement.parentElement);
+            
+            if(currentIdx !== -1) {
+                for(let i = currentIdx + 1; i < rows.length; i++) {
+                    rows[i].querySelector('.multi-tx-date').value = lastSelectedMultiDate;
+                }
+            }
+        }
+    }
+
+    function removeMultiRow(button) {
+        const row = button.parentElement;
+        row.remove();
+        const list = document.getElementById('multi-entries-list');
+        if (list.children.length === 0) {
+            clearMultiEntries();
+        }
+    }
+
+    function clearMultiEntries() {
+        document.getElementById('multi-entries-list').innerHTML = '';
+        document.getElementById('multi-entries-container').style.display = 'none';
+        document.getElementById('single-entry-row').style.display = 'flex';
+        lastSelectedMultiDate = new Date().toISOString().split('T')[0];
+    }
+
+    function postMultipleEntries() {
+        if(!currentAgentId) return;
+
+        const list = document.getElementById('multi-entries-list');
+        const rows = list.querySelectorAll('.multi-entry-row');
+        
+        if(rows.length === 0) {
+            alert("No entries to add. Please add rows first.");
+            return;
+        }
+
+        let tempEntries = [];
+        let isValid = true;
+
+        rows.forEach((row, idx) => {
+            const date = row.querySelector('.multi-tx-date').value;
+            const nameRef = row.querySelector('.multi-tx-name').value.trim().toUpperCase();
+            const details = row.querySelector('.multi-tx-details').value.trim();
+            const entryBy = row.querySelector('.multi-tx-entry-by').value;
+            const type = row.querySelector('.multi-tx-type').value;
+            const amount = parseFloat(row.querySelector('.multi-tx-amount').value);
+
+            if(!date || !details || !isAllowedEntryBy(entryBy) || isNaN(amount) || amount <= 0) {
+                alert(`Row No. ${idx + 1} is invalid! Please select Entry By and fill out Date, Details, and Amount properly.`);
+                isValid = false;
+                return;
+            }
+
+            tempEntries.push({ date, nameRef, details, entryBy, type, amount });
+        });
+
+        if(!isValid) return;
+
+        tempEntries.forEach(entry => {
+            appData.database[currentAgentId].transactions.push(entry);
+            logActivity('add', entry.type === 'credit' ? 'Payment received' : 'New debit entry',
+                entry.entryBy + ' · ' + (entry.nameRef ? entry.nameRef + ' · ' : '') + entry.details + ' · PKR ' + entry.amount.toLocaleString('en-US'), 'add');
+        });
+
+        appData.database[currentAgentId].transactions.sort((a, b) => new Date(a.date) - new Date(b.date));
+        saveToCloud();
+        clearMultiEntries();
+        renderLedger();
+    }
+
+    async function deleteTransaction(index) {
+        if (!await verifyLedgerPin("Enter Ledger PIN to delete this entry:")) return;
+        if(confirm("Delete record permanently?")) {
+            const removed = appData.database[currentAgentId].transactions[index];
+            confirmedDeletedTransactions.push({agentId: currentAgentId, transaction: JSON.stringify(removed)});
+            appData.database[currentAgentId].transactions.splice(index, 1);
+            logActivity('delete', 'Transaction deleted', (removed?.details || 'Ledger entry') + ' · PKR ' + (removed?.amount || 0).toLocaleString('en-US'), 'delete');
+            saveToCloud();
+            renderLedger();
+        }
+    }
+
+    function resetDateFilter() {
+        document.getElementById('filter-from-date').value = '';
+        document.getElementById('filter-to-date').value = '';
+        renderLedger();
+    }
+
+    function downloadLedgerBackup(){
+        if(ledgerDirty || ledgerSaving || ledgerConflict || ledgerVersion===null){alert('Wait until all changes are saved before downloading a cloud backup.');return;}
+        google.script.run.withSuccessHandler(function(backup){
+            if(!backup || backup.format!=='SANAA_LEDGER_BACKUP_V1'){alert('Backup unavailable');return;}
+            const content=JSON.stringify(backup,null,2);
+            const blob=new Blob([content],{type:'application/json'});
+            const url=URL.createObjectURL(blob),a=document.createElement('a');
+            a.href=url;a.download='Sanaa_Ledger_Backup_'+new Date().toISOString().slice(0,10)+'.json';
+            document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+        }).withFailureHandler(e=>alert('Backup failed: '+e.message)).exportLedgerBackup();
+    }
+    function restoreLedgerFile(input){
+        const file=input.files&&input.files[0];input.value='';if(!file)return;
+        if(ledgerDirty||ledgerSaving||ledgerConflict||ledgerVersion===null){alert('Unsaved changes or sync issue. Restore is blocked until cloud is synchronized.');return;}
+        if(file.size>5000000){alert('Backup file is too large.');return;}
+        const reader=new FileReader();
+        reader.onload=function(){
+            let backup;try{backup=JSON.parse(reader.result);}catch(e){alert('Invalid JSON backup');return;}
+            if(!backup||backup.format!=='SANAA_LEDGER_BACKUP_V1'||!backup.data||!backup.data.database||!Array.isArray(backup.data.agentOrder)){alert('Invalid ledger backup format');return;}
+            const n=Object.keys(backup.data.database).length;
+            if(!confirm('Merge backup containing '+n+' accounts? Existing cloud entries will be kept. Only missing entries will be added. Download a backup first.'))return;
+            
+            ledgerSaving=true;setSyncStatus('saving','⏳ Restoring backup...');
+            google.script.run.withSuccessHandler(function(res){
+                ledgerSaving=false;
+                if(!res||res.status!=='success'){ledgerConflict=!!(res&&res.status==='conflict');setSyncStatus('error','⚠️ Restore failed: '+(res&&res.message||'Unknown'));return;}
+                ledgerVersion=res.version;confirmedDeletedAgentIds=[];confirmedDeletedTransactions=[];
+                ledgerDirty=false;ledgerConflict=false;currentAgentId=null;
+                document.getElementById('ledger-view').style.display='none';
+                document.getElementById('dashboard-view').style.display='block';
+                setSyncStatus('online','☁️ Backup restored & verified');loadFromCloud();
+                alert('Merge successful: '+res.accounts+' new accounts, '+res.transactions+' new transactions added.');
+            }).withFailureHandler(function(e){ledgerSaving=false;setSyncStatus('error','⚠️ Restore failed');alert(e.message);}).restoreLedgerBackup(JSON.stringify(backup),ledgerVersion);
+        };
+        reader.readAsText(file);
+    }
+
+    setInterval(function(){ const el=document.activeElement; if(el && (el.matches('input, textarea, select, [contenteditable=true]'))) return; loadFromCloud(); }, 8000);
+    tryExistingSession();
+</script>
+
+</body>
+</html>
+<!-- Redeploy -->
